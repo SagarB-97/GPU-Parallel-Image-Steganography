@@ -32,6 +32,13 @@ int main(int argc, char *argv[]){
     char *inputImageFile = argv[1];
     char *inputAudioFile = argv[2];
 
+
+    // Create Cuda Events //
+    cudaEvent_t start, stop;
+    cudaEventCreate(&start);
+    cudaEventCreate(&stop);
+    ////////////////////////////
+
     // Read input image
     PPMimg *inpImg = readPPM(inputImageFile);
     int width = inpImg->width;
@@ -72,8 +79,13 @@ int main(int argc, char *argv[]){
     dim3 blockDim(THREADS_PER_BLOCK, 1, 1);
     dim3 gridDim((audioSize-1)/THREADS_PER_BLOCK + 1, 1, 1);
 
+    cudaEventRecord(start);        
     encrypt<<<blockDim, gridDim>>>(d_inputImageData, d_outputImageData, width, height, d_audioData, 
             audioSize);
+    cudaEventRecord(stop);
+    cudaEventSynchronize(stop);
+    float gpuTime = 0;
+    cudaEventElapsedTime(&gpuTime, start, stop);
     //--------------------------------------------------------------------------//
 
     // Writing result to host
@@ -89,4 +101,7 @@ int main(int argc, char *argv[]){
     cudaFree(d_inputImageData);
     cudaFree(d_outputImageData);
     cudaFree(d_audioData);
+
+    // Time Print
+    cout<<"GPU Time taken (encrypt) = "<<gpuTime<<" ms\n";
 }

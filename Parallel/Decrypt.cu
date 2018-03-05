@@ -34,6 +34,12 @@ int main(int argc, char *argv[]){
     char *inputImageFile = argv[1];
     int audioSize = atoi(argv[2]);
 
+    // Create Cuda Events //
+    cudaEvent_t start, stop;
+    cudaEventCreate(&start);
+    cudaEventCreate(&stop);
+    ////////////////////////////
+
     // Read input image
     PPMimg *inpImg = readPPM(inputImageFile);
     int width = inpImg->width;
@@ -61,7 +67,12 @@ int main(int argc, char *argv[]){
     dim3 blockDim(THREADS_PER_BLOCK, 1, 1);
     dim3 gridDim((audioSize-1)/THREADS_PER_BLOCK + 1, 1, 1);
 
+    cudaEventRecord(start);    
     decrypt<<<blockDim, gridDim>>>(d_inputImageData, width, height, d_extractedAudioData, audioSize);
+    cudaEventRecord(stop);
+    cudaEventSynchronize(stop);
+    float gpuTime = 0;
+    cudaEventElapsedTime(&gpuTime, start, stop);
     //--------------------------------------------------------------------------//
 
     // Copying result to host
@@ -72,4 +83,7 @@ int main(int argc, char *argv[]){
     char outputAudioFile[] = "././Dataset/parallel_output.mp3";
     writeMP3(outputAudioFile, extractedAudioData, audioSize);
     //--------------------------------------------------------------------------//
+
+    // Time Print
+    cout<<"GPU Time taken (decrypt) = "<<gpuTime<<" ms\n";
 }

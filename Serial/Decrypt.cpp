@@ -25,7 +25,9 @@ int main(int argc, char *argv[])
     // Steganography
     char *extractedAudioData = (char *)malloc(audioSize);
     long long imgCurrentPixel = 0;
-    long long audioCurrentByte = 0;
+    long long audioCurrentByte = 0;    
+    
+    clock_t startTime = clock();
     for (long int i = 0; i < audioSize; i++)
     {
         std::bitset<8> audioByte(0);
@@ -39,9 +41,15 @@ int main(int argc, char *argv[])
         }
         extractedAudioData[audioCurrentByte++] = static_cast<unsigned char>(audioByte.to_ulong());
     }
+    clock_t endTime = clock();
+
 
     // Writing back audio file
     char outputAudioFile[] = "././Dataset/serial_output.mp3";
     writeMP3(outputAudioFile, extractedAudioData, audioSize);
     //--------------------------------------------------------------------------//
+
+    // Time calculation
+    double cpuTime = (double)(endTime - startTime) / CLOCKS_PER_SEC;
+    cout << "CPU Time taken (decrypt) = " << cpuTime * 1000 << " ms\n";
 }

@@ -19,8 +19,8 @@ int main(int argc, char *argv[])
 
     PPMpixel *inData = inpImg->data;
     PPMpixel *outData = (PPMpixel *)malloc(sizeof(PPMpixel) * totPixels);
-    unsigned char * inputImageData = ppmTochar(inData, width, height);
-    unsigned char * outputImageData = (unsigned char *)malloc(totPixels * 3ll);
+    unsigned char *inputImageData = ppmTochar(inData, width, height);
+    unsigned char *outputImageData = (unsigned char *)malloc(totPixels * 3ll);
     //--------------------------------------------------------------------------//
 
     // Read input audio file
@@ -34,6 +34,7 @@ int main(int argc, char *argv[])
 
     // Steganography
     long long imgCurrentPixel = 0;
+    clock_t startTime = clock();
     for (long int i = 0; i < inpAudio->size; i++)
     {
         unsigned char x = (unsigned char)audioData[i];
@@ -52,11 +53,16 @@ int main(int argc, char *argv[])
         outputImageData[imgCurrentPixel] = inputImageData[imgCurrentPixel];
         imgCurrentPixel++;
     }
+    clock_t endTime = clock();
 
     // Writing back output image
     char outputImageFile[] = "././Dataset/serial_output.ppm";
     writePPM(outputImageFile, outputImageData, inpImg->width, inpImg->height, 3);
     //--------------------------------------------------------------------------//
+
+    // Time calculation
+    double cpuTime = (double)(endTime - startTime) / CLOCKS_PER_SEC;
+    cout << "CPU Time taken (encrypt) = " << cpuTime * 1000 << " ms\n";
 
     free(audioData);
 }
