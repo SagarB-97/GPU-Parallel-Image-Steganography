@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
     }
 
     // Writing back audio file
-    char outputAudioFile[] = "Dataset/output.mp3";
+    char outputAudioFile[] = "././Dataset/serial_output.mp3";
     writeMP3(outputAudioFile, extractedAudioData, audioSize);
     //--------------------------------------------------------------------------//
 }

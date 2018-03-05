@@ -66,7 +66,7 @@ int main(int argc, char *argv[])
     }
 
     // Writing back output image
-    char outputImageFile[] = "Dataset/output.ppm";
+    char outputImageFile[] = "././Dataset/serial_output.ppm";
     writePPM(outputImageFile, outputImageData, inpImg->width, inpImg->height, 3);
     //--------------------------------------------------------------------------//
 
