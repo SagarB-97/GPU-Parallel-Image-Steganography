@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
 {
 
     char *inputImageFile = argv[1];
-    int audioSize = atoi(argv[2]);
+    int audioSize;// = atoi(argv[2]);
 
     // Read input image
     PPMimg *inpImg = readPPM(inputImageFile);
@@ -20,6 +20,12 @@ int main(int argc, char *argv[])
     PPMpixel *inData = inpImg->data;
     PPMpixel *outData = (PPMpixel *)malloc(sizeof(PPMpixel) * totPixels);
     unsigned char *inputImageData = ppmTochar(inData, width, height);
+    int LT = 0, RT = width * 3 - 3, LB = width * (height - 1) * 3, RB = sizeof(inputImageData) - 3;
+
+    //--------------------------------------------------------------------------//
+
+    // Extract audio size
+    audioSize = (int)inputImageData[LT] + (((int)inputImageData[RT]) << 8) + (((int)inputImageData[LB]) << 16) + (((int)inputImageData[RB]) << 24);//--------------------------------------------------------------------------//
     //--------------------------------------------------------------------------//
 
     // Steganography
@@ -33,15 +39,18 @@ int main(int argc, char *argv[])
         int bitC = 7;
         while (bitC >= 0)
         {
-            audioByte[bitC] = inputImageData[imgCurrentPixel] & 1;
-            bitC -= 1;
+            if ((imgCurrentPixel != LT) && (imgCurrentPixel != RT) && (imgCurrentPixel != LB) && (imgCurrentPixel != RB))
+            {            
+                audioByte[bitC] = inputImageData[imgCurrentPixel] & 1;
+                bitC -= 1;
+            }
             imgCurrentPixel += 1;
         }
         extractedAudioData[audioCurrentByte++] = static_cast<unsigned char>(audioByte.to_ulong());
     }
 
     // Writing back audio file
-    char outputAudioFile[] = "Dataset/output.txt";
+    char outputAudioFile[] = "Dataset/output.mp3";
     writeMP3(outputAudioFile, extractedAudioData, audioSize);
     //--------------------------------------------------------------------------//
 }

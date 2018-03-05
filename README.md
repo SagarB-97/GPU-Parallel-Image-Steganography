@@ -11,15 +11,14 @@ g++ Encrypt.cpp -o encrypt
 
 Where,<br>
 Dataset/test.ppm is the image in which audio must be concealed<br>
-Dataset/test.mp is the audio file to be concealed<br>
+Dataset/test.mp3 is the audio file to be concealed<br>
 
 ## Decrypting / Retrieving Audio
 
 ```
 g++ Decrypt.cpp -o decrypt
-./decrypt Dataset/output.ppm 25823
+./decrypt Dataset/output.ppm
 ```
 
 Where,<br>
 Dataset/output.ppm is the image in which audio is concealed<br>
-25823 is the size of the audio in bytes<br>
