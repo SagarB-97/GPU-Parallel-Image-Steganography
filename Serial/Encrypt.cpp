@@ -32,10 +32,17 @@ int main(int argc, char *argv[])
          << (inpAudio->size * 8) << " bits)\n";
     cout << "Size of image file = " << totPixels * 3 << " bytes\n";
 
+    // Check if audio file can be hidden in the given image
+    if (totPixels * 3 < inpAudio->size * 8)
+    {
+        cout << "The image size is too small to hide the image";
+        exit(0);
+    }
+
     // Steganography
     long long imgCurrentPixel = 0;
     clock_t startTime = clock();
-    for (long int i = 0; i < inpAudio->size; i++)
+    for (long int i = 0; i < inpAudio->size ; i++)
     {
         unsigned char x = (unsigned char)audioData[i];
         std::bitset<8> audioByte(x);

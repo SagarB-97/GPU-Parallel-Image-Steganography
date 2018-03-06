@@ -52,3 +52,21 @@ The resultant audio named `parallel_output.mp3` will be saved in `Dataset/`<br>
 Where,<br>
 Dataset/output.ppm is the image in which audio is concealed<br>
 25823 is the size of the audio in bytes<br>
+
+## Tests
+
+Make the test scripts executable
+```
+chmod +x test_sameAudio.sh
+chmod +x test_sameImage.sh
+```
+
+Add your datasets (images and audio) to the `Dataset` folder (within the respective `audio` and `images` folders)
+
+Then run the scripts
+```
+./test_sameAudio.sh
+./test_sameImage.sh
+```
+
+The execution times will be written to `times_sameAudio.txt` and `times_sameImage.txt`
