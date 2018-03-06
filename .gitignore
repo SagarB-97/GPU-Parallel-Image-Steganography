@@ -4,3 +4,7 @@ encrypt
 Dataset/
 times_sameAudio.txt
 times_sameImage.txt
+serial_encrypt
+parallel_encrypt
+serial_decrypt
+parallel_decrypt
