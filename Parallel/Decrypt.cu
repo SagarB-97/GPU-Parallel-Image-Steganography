@@ -9,8 +9,8 @@ using namespace std;
 
 __global__
 void decrypt(unsigned char * inputImageData, int width, int height,
-        char * audioData, int audioSize) {
-    int index = blockIdx.x * blockDim.x + threadIdx.x;
+        char * audioData, long long audioSize) {
+    long long index = blockIdx.x * blockDim.x + threadIdx.x;
 
     if(index < audioSize){
         unsigned char audioByte = 0;
@@ -32,8 +32,9 @@ void decrypt(unsigned char * inputImageData, int width, int height,
 int main(int argc, char *argv[]){
 
     char *inputImageFile = argv[1];
-    int audioSize = atoi(argv[2]);
-
+    long long audioSize = atoi(argv[2]);
+    char *outputFileExtension = argv[3];    
+    
     // Create Cuda Events //
     cudaEvent_t start, stop;
     cudaEventCreate(&start);
@@ -44,7 +45,7 @@ int main(int argc, char *argv[]){
     PPMimg *inpImg = readPPM(inputImageFile);
     int width = inpImg->width;
     int height = inpImg->height;
-    int totPixels = width * height;
+    long long totPixels = (long long)width * height;
 
     PPMpixel *inData = inpImg->data;
     PPMpixel *outData = (PPMpixel *)malloc(sizeof(PPMpixel) * totPixels);
@@ -81,6 +82,7 @@ int main(int argc, char *argv[]){
 
     // Writing back audio file
     char outputAudioFile[] = "././Dataset/parallel_output.mp3";
+    strcat(outputAudioFile, outputFileExtension);
     writeMP3(outputAudioFile, extractedAudioData, audioSize);
     //--------------------------------------------------------------------------//
 

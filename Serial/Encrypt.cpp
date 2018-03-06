@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
     PPMimg *inpImg = readPPM(inputImageFile);
     int width = inpImg->width;
     int height = inpImg->height;
-    int totPixels = width * height;
+    long long totPixels = (long long)width * height;
 
     PPMpixel *inData = inpImg->data;
     PPMpixel *outData = (PPMpixel *)malloc(sizeof(PPMpixel) * totPixels);

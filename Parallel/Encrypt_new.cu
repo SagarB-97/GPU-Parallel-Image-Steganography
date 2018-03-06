@@ -9,7 +9,7 @@ using namespace std;
 
 __global__
 void encrypt(unsigned char * inputImageData, unsigned char * outputImageData, int width, int height,
-        char * audioData, long long audioSize) {
+        char * audioData, long long audioSize, int invokationNumber) {
     long long index = blockIdx.x * blockDim.x + threadIdx.x;
 
     if(index < audioSize){
@@ -75,19 +75,25 @@ int main(int argc, char *argv[]){
     cout << "Size of image file = " << totPixels * 3 << " bytes\n";
 
     // Invoke Kernel
-    long long audioSize = inpAudio -> size;
-    dim3 blockDim(THREADS_PER_BLOCK, 1, 1);
-    dim3 gridDim((audioSize-1)/THREADS_PER_BLOCK + 1, 1, 1);
+    long long audioBytesRemaining = inpAudio -> size;
+    int numberOfInvokations = (audioBytesRemaining - 1)/(65535ll * THREADS_PER_BLOCK) + 1;
+    
+    float totalGpuTime = 0;    
+    for(int i = 0;i < numberOfInvokations; i++){
+        dim3 blockDim(THREADS_PER_BLOCK, 1, 1);
+        int numberOfBlocks = min(65535, (audioBytesRemaining-1)/THREADS_PER_BLOCK + 1)
+        dim3 gridDim(numberOfBlocks, 1, 1);
+        
+        float gpuTime = 0;
+        cudaEventRecord(start);
+        encrypt<<<blockDim, gridDim>>>(d_inputImageData, d_outputImageData, width, height, d_audioData, 
+            audioSize, i);
+        cudaEventRecord(stop);
+        cudaEventSynchronize(stop);
+        cudaEventElapsedTime(&gpuTime, start, stop);
+        totalGpuTime += gpuTime;
 
-    cout<<"Blocks = "<<(audioSize-1)/THREADS_PER_BLOCK + 1<<"\n";
-
-    cudaEventRecord(start);        
-    encrypt<<<blockDim, gridDim>>>(d_inputImageData, d_outputImageData, width, height, d_audioData, 
-            audioSize);
-    cudaEventRecord(stop);
-    cudaEventSynchronize(stop);
-    float gpuTime = 0;
-    cudaEventElapsedTime(&gpuTime, start, stop);
+    }
     //--------------------------------------------------------------------------//
 
     // Writing result to host
