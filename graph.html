@@ -1,0 +1,113 @@
+<html>
+
+<head>
+    <title>
+        GPU Parallel Image Steganography
+    </title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css">
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/i18n/defaults-*.min.js"></script>
+
+</head>
+
+<body>
+    <div class="container">
+        <div class="row" style="text-align:center;">
+            <h1>Graph showing serial execution times for different sizes of audio and image files</h1>
+        </div>
+        <hr>
+        <h4 style="text-align:center;">
+          Click on a legend to toggle visibility of the associated graph
+        </h4>
+        <br />
+        <div class="row">
+            <div class="col-sm-1">
+            </div>
+            <div class="col-sm-10">
+                <div style="width:1000px;height:600px;text-align:center;margin: 0 auto;">
+                    <p style="text-align:center;">
+                        <canvas id="myChart"></canvas>
+                    </p>
+                </div>
+            </div>
+            <div class="col-sm-1"></div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+    <script>
+        function all() {
+            var ctx = document.getElementById('myChart').getContext('2d');
+            var chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                labels: ["1440000", "1320000", "1889568", "2332800", "4261257"],
+                    datasets: [
+                    {
+                        label: "99481 bytes",
+                        borderColor: 'rgb(238,130,238)',
+                        data: [24.43, 23.063, 25.773, 28.979, 32.378],
+                        fill: false,
+                    },
+                    {
+                        label: "108401 bytes",
+                        borderColor: 'rgb(0, 0, 0)',
+                        data: [25.637, 25.355, 32.526, 33.424, 34.284],
+                        fill: false,
+                    },
+                    {
+                        label: "131335 bytes",
+                        borderColor: 'rgb(255, 0, 0)',
+                        data: [29.977, 30.742, 31.802, 33.23, 45.814],
+                        fill: false,
+                    }, 
+                    {
+                        label: "143899 bytes",
+                        borderColor: 'rgb(0,112,214)',
+                        data: [33.392, 35.865, 35.036, 36.701, 41.875],
+                        fill: false,
+                    },
+                    {
+                        label: "151866 bytes",
+                        borderColor: 'rgb(35, 255, 0)',
+                        data: [34.904, 35.16, 35.958, 37.127, 43.615],
+                        fill: false,
+                    },
+                  ]
+                },
+                options: {
+                    legend:{
+                      position : 'left',
+                    },
+                    scales: {
+                        xAxes: [{
+                            display: true,
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Size of image (in bytes)'
+                            }
+                        }],
+                        yAxes: [{
+                            display: true,
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Time to hide the audio (ms)'
+                            }
+                        }]
+                    }
+                }
+            });
+        }
+        $(document).ready(function() {
+            all();
+        });
+    </script>
+</body>
+
+</html>
