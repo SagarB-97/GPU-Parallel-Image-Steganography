@@ -9,13 +9,14 @@ int main(int argc, char *argv[])
 {
 
     char *inputImageFile = argv[1];
-    int audioSize = atoi(argv[2]);
+    long long audioSize = atoi(argv[2]);
+    char *outputFileExtension = argv[3];    
 
     // Read input image
     PPMimg *inpImg = readPPM(inputImageFile);
     int width = inpImg->width;
     int height = inpImg->height;
-    int totPixels = width * height;
+    long long totPixels = (long long)width * height;
 
     PPMpixel *inData = inpImg->data;
     PPMpixel *outData = (PPMpixel *)malloc(sizeof(PPMpixel) * totPixels);
@@ -45,7 +46,8 @@ int main(int argc, char *argv[])
 
 
     // Writing back audio file
-    char outputAudioFile[] = "././Dataset/serial_output.mp3";
+    char outputAudioFile[] = "././Dataset/serial_output.";
+    strcat(outputAudioFile, outputFileExtension);
     writeMP3(outputAudioFile, extractedAudioData, audioSize);
     //--------------------------------------------------------------------------//
 

@@ -4,7 +4,7 @@
 typedef struct
 {
     char *data;
-    int size;
+    long long size;
 } MP3File;
 
 MP3File *readMP3(const char *filename)
